@@ -4,6 +4,7 @@ package codegym;
 //import com.codegym.cms.repository.impl.CustomerRepositoryImpl;
 //import com.codegym.cms.service.CustomerService;
 //import com.codegym.cms.service.impl.CustomerServiecImpl;
+import codegym.formatter.ProvinceFormatter;
 import codegym.service.CustomerService;
 import codegym.service.CustomerServiceImpl;
 import codegym.service.ProvinceService;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -69,6 +71,7 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     public ThymeleafViewResolver viewResolver(){
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
         viewResolver.setTemplateEngine(templateEngine());
+        viewResolver.setCharacterEncoding("UTF-8");
         return viewResolver;
     }
 
@@ -96,7 +99,7 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/cms");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/cms?useUnicode=yes&amp;characterEncoding=UTF-8\"");
         dataSource.setUsername( "root" );
         dataSource.setPassword( "Nghi3mgi4n" );
         return dataSource;
@@ -124,6 +127,11 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     @Bean
     public ProvinceService provineService() {
         return new codegym.ProvinceServiceImpl();
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new ProvinceFormatter(applicationContext.getBean(ProvinceService.class)));
     }
 
 }
